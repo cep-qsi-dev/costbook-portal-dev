@@ -1,0 +1,11 @@
+---
+deployment:
+  tasks:
+    - export DEPLOY_DOCROOT="$HOME/dev.portal.costbook.ph"
+    - 'if [ -x "/opt/alt/alt-nodejs18/root/usr/bin/node" ]; then export PATH="/opt/alt/alt-nodejs18/root/usr/bin:$PATH"; fi'
+    - npm ci || npm install
+    - npm run build
+    - 'mkdir -p "$DEPLOY_DOCROOT"'
+    - 'find "$DEPLOY_DOCROOT" -mindepth 1 -maxdepth 1 ! -name ".well-known" -exec rm -rf {} +'
+    - 'cp -a dist/. "$DEPLOY_DOCROOT"/'
+    - 'date +"%Y-%m-%d %H:%M:%S %Z" > "$DEPLOY_DOCROOT/DEPLOYED_AT.txt"'
